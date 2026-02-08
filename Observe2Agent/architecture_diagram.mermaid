@@ -1,0 +1,78 @@
+graph TB
+    subgraph USER["👤 User/Browser Layer"]
+        USER1["User Browser"]
+    end
+
+    subgraph FRONTEND["🎨 Frontend Layer"]
+        direction TB
+        FE1["React/Next.js Application"]
+        FE2["Video Upload Component"]
+        FE3["Results Dashboard"]
+    end
+
+    subgraph API["⚙️ FastAPI Backend Layer"]
+        direction TB
+        API1["FastAPI Server"]
+        API2["Request Router"]
+        API3["Response Orchestrator"]
+        API4["Execution Engine"]
+    end
+
+    subgraph AGENTS["🤖 AI Agent Layer"]
+        direction TB
+        AGENT1["Video Understanding<br/>Agent<br/>Gemini 3"]
+        AGENT2["ECM Mapping<br/>Agent"]
+        AGENT3["DocAI Extraction<br/>Module"]
+        AGENT4["Data Entry<br/>Agent"]
+        AGENT5["Validation<br/>Agent"]
+    end
+
+    subgraph EXTERNAL["☁️ External Services"]
+        direction TB
+        EXT1["Gemini 3<br/>Multimodal AI"]
+        EXT2["Google DocAI<br/>Document Intelligence"]
+        EXT3["Enterprise DB<br/>PostgreSQL/Cloud SQL"]
+    end
+
+    subgraph PROCESSING["📊 Processing Pipeline"]
+        direction TB
+        PROC1["SOP Generator"]
+        PROC2["System Detector"]
+        PROC3["Screen Mapper"]
+        PROC4["ADK Code Generator"]
+        PROC5["Python ADK Runner"]
+    end
+
+    USER1 -->|"Upload Video"| FE2
+    FE2 -->|"Video File"| API2
+    API2 -->|"Route Request"| API1
+    API1 -->|"Process Video"| AGENT1
+    AGENT1 -->|"Call API"| EXT1
+    EXT1 -->|"Video Analysis"| AGENT1
+    AGENT1 -->|"Systems + SOP"| PROC1
+    PROC1 -->|"Structured SOP"| PROC2
+    PROC2 -->|"Systems Detected"| PROC3
+    PROC3 -->|"Screen Mappings"| PROC4
+    PROC4 -->|"ADK Code"| PROC5
+
+    PROC1 -->|"SOP Data"| AGENT2
+    AGENT2 -->|"Extract Plan"| AGENT3
+    AGENT3 -->|"Call API"| EXT2
+    EXT2 -->|"Extracted Fields"| AGENT3
+    AGENT3 -->|"Structured Data"| AGENT4
+    AGENT4 -->|"Write Records"| EXT3
+    AGENT4 -->|"DB Updated"| AGENT5
+    AGENT5 -->|"Verify Data"| EXT3
+    AGENT5 -->|"Validation Report"| API3
+
+    PROC5 -->|"Execution Status"| API3
+    API3 -->|"Aggregate Results"| API4
+    API4 -->|"Response Data"| FE3
+    FE3 -->|"Display Results"| USER1
+
+    style USER fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    style FRONTEND fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style API fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style AGENTS fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    style EXTERNAL fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    style PROCESSING fill:#f1f8e9,stroke:#33691e,stroke-width:2px

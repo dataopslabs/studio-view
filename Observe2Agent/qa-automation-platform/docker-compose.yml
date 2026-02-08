@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: qa-automation-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./backend:/app/backend
+      - ./agents:/app/agents
+    depends_on:
+      - postgres
+    networks:
+      - qa-automation-network
+    command: >
+      sh -c "cd /app && pip install -r backend/requirements.txt &&
+             python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: qa-automation-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NODE_ENV=development
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+    depends_on:
+      - backend
+    networks:
+      - qa-automation-network
+    command: npm run dev
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: qa-automation-db
+    environment:
+      - POSTGRES_USER=${DB_USER:-qa_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-qa_password}
+      - POSTGRES_DB=${DB_NAME:-qa_automation}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - qa-automation-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-qa_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  qa-automation-network:
+    driver: bridge

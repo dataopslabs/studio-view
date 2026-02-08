@@ -1,0 +1,113 @@
+graph LR
+    subgraph INPUT["Input"]
+        VID["📹<br/>Video File"]
+    end
+
+    subgraph PREPROCESSING["Preprocessing"]
+        FRAMES["📊<br/>Extract Frames"]
+        AUDIO["🔊<br/>Extract Audio"]
+    end
+
+    subgraph AI_ANALYSIS["AI Analysis<br/>Gemini 3"]
+        GEMINI["🤖<br/>Multimodal<br/>Analysis"]
+    end
+
+    subgraph WORKFLOW_OUTPUT["Workflow Understanding"]
+        SYSDET["🔍<br/>Systems<br/>Detected"]
+        SCREENMAP["🖥️<br/>Screen<br/>Mappings"]
+        WORKFLOW["📋<br/>Workflow<br/>Steps"]
+    end
+
+    subgraph SOP_GENERATION["SOP Generation"]
+        SOP["📄<br/>Structured SOP<br/>JSON"]
+        STEPS["✅<br/>Process Steps<br/>Metadata"]
+    end
+
+    subgraph ECM_PROCESSING["ECM Processing"]
+        ECMMAP["🗂️<br/>ECM Attribute<br/>Mapping"]
+        EXTPLAN["📋<br/>Extraction<br/>Plan"]
+    end
+
+    subgraph DOCAI_EXTRACTION["Document Extraction<br/>Google DocAI"]
+        DOCAI["📑<br/>Document<br/>AI Parser"]
+        FIELDS["📊<br/>Extracted<br/>Fields"]
+    end
+
+    subgraph TRANSFORMATION["Data Transformation"]
+        STRUCT["🔄<br/>Structured<br/>Format"]
+        VALIDATE_DATA["✓<br/>Data<br/>Validation"]
+    end
+
+    subgraph DATABASE["Database Operations"]
+        DB_ICON["💾<br/>Enterprise DB<br/>PostgreSQL"]
+        DB_WRITE["📝<br/>Write<br/>Records"]
+        DB_READ["📖<br/>Read<br/>Verification"]
+    end
+
+    subgraph VALIDATION["Validation"]
+        COMPARE["⚖️<br/>Compare<br/>Metadata vs DB"]
+        VAL_RESULT["✔️/❌<br/>Validation<br/>Result"]
+    end
+
+    subgraph ADK_GENERATION["ADK Code Generation"]
+        CODEGEN["💻<br/>Generate<br/>ADK Code"]
+        RUNNER["🚀<br/>Python ADK<br/>Runner"]
+    end
+
+    subgraph OUTPUT["Output & Status"]
+        STATUS["📊<br/>Execution<br/>Status"]
+        REPORT["📈<br/>Validation<br/>Report"]
+    end
+
+    VID -->|"Extract"| FRAMES
+    VID -->|"Extract"| AUDIO
+    FRAMES -->|"Video Frames"| GEMINI
+    AUDIO -->|"Audio Track"| GEMINI
+
+    GEMINI -->|"Identifies"| SYSDET
+    GEMINI -->|"Maps UI"| SCREENMAP
+    GEMINI -->|"Detects"| WORKFLOW
+
+    SYSDET -->|"Feed to"| SOP
+    SCREENMAP -->|"Reference"| SOP
+    WORKFLOW -->|"Generate"| SOP
+    SOP -->|"Detailed"| STEPS
+
+    STEPS -->|"Input"| ECMMAP
+    STEPS -->|"Create"| EXTPLAN
+
+    EXTPLAN -->|"Documents"| DOCAI
+    DOCAI -->|"Extract"| FIELDS
+
+    FIELDS -->|"Transform"| STRUCT
+    STRUCT -->|"Validate"| VALIDATE_DATA
+
+    VALIDATE_DATA -->|"Insert/Update"| DB_WRITE
+    DB_WRITE -->|"Confirmation"| DB_ICON
+    DB_ICON -->|"Query"| DB_READ
+
+    DB_READ -->|"Retrieved Data"| COMPARE
+    STEPS -->|"Source Data"| COMPARE
+    COMPARE -->|"Result"| VAL_RESULT
+
+    SYSDET -->|"Systems List"| CODEGEN
+    STEPS -->|"Process Steps"| CODEGEN
+    CODEGEN -->|"Generated Code"| RUNNER
+    RUNNER -->|"Execution"| STATUS
+
+    VAL_RESULT -->|"Include"| REPORT
+    STATUS -->|"Aggregate"| REPORT
+    REPORT -->|"Final Output"| OUTPUT
+
+    style INPUT fill:#bbdefb,stroke:#0d47a1,stroke-width:2px,color:#000
+    style PREPROCESSING fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style AI_ANALYSIS fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    style WORKFLOW_OUTPUT fill:#f8bbd0,stroke:#880e4f,stroke-width:2px,color:#000
+    style SOP_GENERATION fill:#e1bee7,stroke:#4a148c,stroke-width:2px,color:#000
+    style ECM_PROCESSING fill:#ffccbc,stroke:#bf360c,stroke-width:2px,color:#000
+    style DOCAI_EXTRACTION fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    style TRANSFORMATION fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style DATABASE fill:#b3e5fc,stroke:#01579b,stroke-width:2px,color:#000
+    style VALIDATION fill:#f8bbd0,stroke:#880e4f,stroke-width:2px,color:#000
+    style ADK_GENERATION fill:#dcedc8,stroke:#33691e,stroke-width:2px,color:#000
+    style OUTPUT fill:#ffe0b2,stroke:#e65100,stroke-width:2px,color:#000

@@ -1,0 +1,84 @@
+sequenceDiagram
+    participant User
+    participant Frontend as Frontend<br/>React/Next.js
+    participant FastAPI
+    participant VideoAgent as Video Understanding<br/>Agent
+    participant Gemini3 as Gemini 3<br/>Multimodal AI
+    participant ECMAgent as ECM Mapping<br/>Agent
+    participant DocAI as Google DocAI
+    participant DataAgent as Data Entry<br/>Agent
+    participant EnterpriseDB as Enterprise DB
+    participant ValidationAgent as Validation<br/>Agent
+
+    User->>Frontend: Upload business process video
+    activate Frontend
+    Frontend->>FastAPI: POST /api/process-video<br/>(video_file)
+    deactivate Frontend
+
+    activate FastAPI
+    FastAPI->>VideoAgent: Initialize video analysis
+    deactivate FastAPI
+
+    activate VideoAgent
+    VideoAgent->>Gemini3: Send video frames + audio<br/>for workflow analysis
+    activate Gemini3
+    Gemini3-->>VideoAgent: Return analyzed workflow<br/>+ detected systems<br/>+ screen mappings
+    deactivate Gemini3
+
+    VideoAgent->>VideoAgent: Generate structured SOP<br/>(JSON format)
+    VideoAgent-->>FastAPI: Return Systems List<br/>+ SOP Document
+    deactivate VideoAgent
+
+    activate FastAPI
+    FastAPI->>ECMAgent: Process SOP for ECM mapping
+    deactivate FastAPI
+
+    activate ECMAgent
+    ECMAgent->>ECMAgent: Map SOP steps to<br/>ECM attributes
+    ECMAgent->>ECMAgent: Generate extraction plan<br/>for documents
+    ECMAgent-->>FastAPI: Return ICMP attributes<br/>+ extraction plan
+    deactivate ECMAgent
+
+    activate FastAPI
+    FastAPI->>DocAI: Send documents for extraction
+    deactivate FastAPI
+
+    activate DocAI
+    DocAI->>DocAI: Extract structured fields<br/>using AI models
+    DocAI-->>FastAPI: Return extracted fields<br/>+ confidence scores
+    deactivate DocAI
+
+    activate FastAPI
+    FastAPI->>DataAgent: Initialize data entry<br/>with extracted fields
+    deactivate FastAPI
+
+    activate DataAgent
+    DataAgent->>EnterpriseDB: Write extracted data<br/>to database records
+    DataAgent-->>FastAPI: DB write confirmation
+    deactivate DataAgent
+
+    activate FastAPI
+    FastAPI->>ValidationAgent: Trigger validation check
+    deactivate FastAPI
+
+    activate ValidationAgent
+    ValidationAgent->>EnterpriseDB: Query written records
+    activate EnterpriseDB
+    EnterpriseDB-->>ValidationAgent: Return stored metadata
+    deactivate EnterpriseDB
+
+    ValidationAgent->>ValidationAgent: Compare metadata<br/>vs source data
+    ValidationAgent->>ValidationAgent: Generate validation report<br/>(pass/fail status)
+    ValidationAgent-->>FastAPI: Return validation results<br/>+ discrepancy report
+    deactivate ValidationAgent
+
+    activate FastAPI
+    FastAPI->>FastAPI: Generate ADK code<br/>for automation
+    FastAPI->>FastAPI: Execute Python ADK Runner
+    FastAPI->>FastAPI: Aggregate all results
+    FastAPI-->>Frontend: Return complete response<br/>(SOP + Systems + Validation +<br/>Execution Status)
+    deactivate FastAPI
+
+    activate Frontend
+    Frontend-->>User: Display results dashboard<br/>+ SOP + Systems Detected<br/>+ Validation Status
+    deactivate Frontend
