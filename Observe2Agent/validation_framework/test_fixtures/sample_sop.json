@@ -1,0 +1,43 @@
+{
+  "name": "User Login Test",
+  "description": "Standard procedure for testing user login functionality across web applications",
+  "system_type": "web_application",
+  "steps": [
+    {
+      "step_number": 1,
+      "action": "Navigate to the application login page",
+      "expected_result": "Login page loads successfully with username and password fields visible",
+      "validation_criteria": "Page title contains 'Login' and form elements are present"
+    },
+    {
+      "step_number": 2,
+      "action": "Enter valid username in the username field",
+      "expected_result": "Username field accepts input and displays entered text",
+      "validation_criteria": "Input field value matches entered username"
+    },
+    {
+      "step_number": 3,
+      "action": "Enter valid password in the password field",
+      "expected_result": "Password field accepts input and masks the password characters",
+      "validation_criteria": "Password field type is 'password' and value is not empty"
+    },
+    {
+      "step_number": 4,
+      "action": "Click the Login button",
+      "expected_result": "Authentication process initiates and user is redirected to dashboard",
+      "validation_criteria": "URL changes to dashboard path and welcome message is displayed"
+    },
+    {
+      "step_number": 5,
+      "action": "Verify user session is established",
+      "expected_result": "User profile information is visible in the header or navigation bar",
+      "validation_criteria": "User name or avatar is displayed indicating successful login"
+    }
+  ],
+  "metadata": {
+    "created_by": "QA Team",
+    "version": "1.0",
+    "tags": ["authentication", "login", "critical-path"],
+    "estimated_duration_seconds": 30
+  }
+}
